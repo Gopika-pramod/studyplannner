@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastel Academic Planner</title>
+    <style>
+        :root {
+            --pastel-pink: #FFD1DC;
+            --pastel-blue: #A7C7E7;
+            --pastel-green: #C1E1C1;
+            --pastel-purple: #D8BFD8;
+            --pastel-yellow: #FAFAD2;
+            --pastel-lavender: #E6E6FA;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--pastel-lavender);
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--pastel-blue);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .student-image {
+            width: 150px;
+            height: 150px;
+            margin-left: 20px;
+        }
+
+        h1 {
+            color: #4a6fa5;
+            margin: 0;
+        }
+
+        .motivational-quote {
+            font-style: italic;
+            margin: 10px 0 0;
+            color: #555;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .tab:hover {
+            background-color: var(--pastel-yellow);
+        }
+
+        .tab.active {
+            background-color: var(--pastel-green);
+            color: #4a6fa5;
+        }
+
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Home Page Styles */
+        .welcome-section {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .progress-tracker {
+            background-color: var(--pastel-pink);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--pastel-purple);
+            width: 0%;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background-color: var(--pastel-yellow);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        /* Subjects Page Styles */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .subject-card {
+            background-color: var(--pastel-pink);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .subject-card h3 {
+            margin-top: 0;
+            color: #4a6fa5;
+        }
+
+        .grade-display {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* To-Do List Styles */
+        .todo-input {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .todo-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+        }
+
+        .todo-input button {
+            padding: 10px 20px;
+            background-color: var(--pastel-green);
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .todo-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .todo-item.completed {
+            opacity: 0.7;
+            background-color: #f0f0f0;
+        }
+
+        .todo-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .todo-item .task-text {
+            flex: 1;
+        }
+
+        .todo-item .delete-btn {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        /* Calendar Styles */
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .calendar th, .calendar td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            height: 80px;
+            vertical-align: top;
+        }
+
+        .calendar th {
+            background-color: var(--pastel-blue);
+            color: white;
+        }
+
+        .calendar td {
+            background-color: white;
+        }
+
+        .calendar .today {
+            background-color: var(--pastel-yellow);
+        }
+
+        .event {
+            font-size: 12px;
+            background-color: var(--pastel-green);
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin: 2px 0;
+        }
+
+        /* Timer Styles */
+        .timer-container {
+            text-align: center;
+            background-color: var(--pastel-purple);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .timer-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .start-btn {
+            background-color: var(--pastel-green);
+        }
+
+        .pause-btn {
+            background-color: var(--pastel-yellow);
+        }
+
+        .reset-btn {
+            background-color: var(--pastel-pink);
+        }
+
+        .timer-settings {
+            margin-top: 20px;
+        }
+
+        .timer-settings label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timer-settings input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .stats {
+                flex-direction: column;
+            }
+
+            .stat-box {
+                margin: 5px 0;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .student-image {
+                margin: 20px auto 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Pastel Academic Planner</h1>
+                <p class="motivational-quote" id="motivational-quote">"The secret of getting ahead is getting started." - Mark Twain</p>
+            </div>
+            <img src="https://cdn-icons-png.flaticon.com/512/2784/2784487.png" alt="Student Cartoon" class="student-image">
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('home')">Home</div>
+            <div class="tab" onclick="openTab('subjects')">Subjects</div>
+            <div class="tab" onclick="openTab('todo')">To-Do List</div>
+            <div class="tab" onclick="openTab('calendar')">Calendar</div>
+            <div class="tab" onclick="openTab('timer')">Study Timer</div>
+        </div>
+
+        <!-- Home Tab -->
+        <div id="home" class="tab-content active">
+            <div class="welcome-section">
+                <h2>Welcome to Your Study Planner!</h2>
+                <p>Organize your academic life with this beautiful pastel-themed planner.</p>
+            </div>
+
+            <div class="progress-tracker">
+                <h3>Your Study Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill">0%</div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-box">
+                        <h4>Today's Study Time</h4>
+                        <p id="today-study">0 hours</p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>Weekly Goal</h4>
+                        <p>20 hours</p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>Completion</h4>
+                        <p id="completion-percent">0%</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-links">
+                <h3>Quick Actions</h3>
+                <button onclick="openTab('todo')">Add a Task</button>
+                <button onclick="openTab('timer')">Start Timer</button>
+                <button onclick="openTab('subjects')">Check Grades</button>
+            </div>
+        </div>
+
+        <!-- Subjects Tab -->
+        <div id="subjects" class="tab-content">
+            <h2>Your Subjects</h2>
+            <div class="subjects-grid" id="subjects-container">
+                <!-- Subjects will be loaded from JSON -->
+            </div>
+            <button onclick="addNewSubject()">Add New Subject</button>
+        </div>
+
+        <!-- To-Do List Tab -->
+        <div id="todo" class="tab-content">
+            <h2>To-Do List</h2>
+            <div class="todo-input">
+                <input type="text" id="new-task" placeholder="Add a new task...">
+                <button onclick="addTask()">Add</button>
+            </div>
+            <ul class="todo-list" id="task-list">
+                <!-- Tasks will be added here -->
+            </ul>
+        </div>
+
+        <!-- Calendar Tab -->
+        <div id="calendar" class="tab-content">
+            <h2>Academic Calendar</h2>
+            <table class="calendar">
+                <thead>
+                    <tr>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body">
+                    <!-- Calendar will be generated by JS -->
+                </tbody>
+            </table>
+            <div class="add-event" style="margin-top: 20px;">
+                <h3>Add Event</h3>
+                <input type="date" id="event-date">
+                <input type="text" id="event-text" placeholder="Event description">
+                <button onclick="addEvent()">Add Event</button>
+            </div>
+        </div>
+
+        <!-- Timer Tab -->
+        <div id="timer" class="tab-content">
+            <h2>Study Timer</h2>
+            <div class="timer-container">
+                <h3>Pomodoro Timer</h3>
+                <div class="timer-display" id="timer-display">25:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn start-btn" onclick="startTimer()">Start</button>
+                    <button class="timer-btn pause-btn" onclick="pauseTimer()">Pause</button>
+                    <button class="timer-btn reset-btn" onclick="resetTimer()">Reset</button>
+                </div>
+                <div class="timer-settings">
+                    <label for="study-time">Study Time (minutes):</label>
+                    <input type="number" id="study-time" value="25" min="1">
+
+                    <label for="break-time">Break Time (minutes):</label>
+                    <input type="number" id="break-time" value="5" min="1">
+                </div>
+            </div>
+            <div class="timer-history">
+                <h3>Today's Sessions</h3>
+                <ul id="session-list">
+                    <!-- Timer sessions will be added here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let studyTimeToday = 0;
+        let totalStudyGoal = 20 * 60; // 20 hours in minutes
+        let totalStudyTime = 0;
+        let timerInterval;
+        let isTimerRunning = false;
+        let isStudyTime = true;
+        let timeLeft = 25 * 60; // 25 minutes in seconds
+        let subjects = [];
+        let tasks = [];
+        let events = [];
+
+        // Motivational quotes
+        const quotes = [
+            '"The secret of getting ahead is getting started." - Mark Twain',
+            '"You don\'t have to be great to start, but you have to start to be great." - Zig Ziglar',
+            '"The expert in anything was once a beginner." - Helen Hayes',
+            '"Success is the sum of small efforts, repeated day in and day out." - Robert Collier',
+            '"The future belongs to those who believe in the beauty of their dreams." - Eleanor Roosevelt',
+            '"You are never too old to set another goal or to dream a new dream." - C.S. Lewis',
+            '"Believe you can and you\'re halfway there." - Theodore Roosevelt'
+        ];
+
+        // Initialize the planner
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load data from localStorage
+            loadData();
+
+            // Set a random motivational quote
+            setRandomQuote();
+
+            // Generate calendar
+            generateCalendar();
+
+            // Update progress tracker
+            updateProgressTracker();
+
+            // Load subjects
+            loadSubjects();
+
+            // Load tasks
+            loadTasks();
+
+            // Load events
+            loadEvents();
+        });
+
+        // Tab navigation
+        function openTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+
+            // Deactivate all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+
+            // Activate the selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            // Special handling for calendar tab
+            if (tabName === 'calendar') {
+                generateCalendar();
+            }
+        }
+
+        // Set a random motivational quote
+        function setRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById('motivational-quote').textContent = quotes[randomIndex];
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            // Load study time
+            if (localStorage.getItem('studyTimeToday')) {
+                studyTimeToday = parseInt(localStorage.getItem('studyTimeToday'));
+            }
+
+            if (localStorage.getItem('totalStudyTime')) {
+                totalStudyTime = parseInt(localStorage.getItem('totalStudyTime'));
+            }
+
+            // Load subjects
+            if (localStorage.getItem('subjects')) {
+                subjects = JSON.parse(localStorage.getItem('subjects'));
+            } else {
+                // Default subjects
+                subjects = [
+                    { name: 'Mathematics', grade: 'A', color: 'pastel-blue' },
+                    { name: 'English Literature', grade: 'B+', color: 'pastel-pink' },
+                    { name: 'Computer Science', grade: 'A-', color: 'pastel-green' },
+                    { name: 'History', grade: 'B', color: 'pastel-yellow' }
+                ];
+                localStorage.setItem('subjects', JSON.stringify(subjects));
+            }
+
+            // Load tasks
+            if (localStorage.getItem('tasks')) {
+                tasks = JSON.parse(localStorage.getItem('tasks'));
+            }
+
+            // Load events
+            if (localStorage.getItem('events')) {
+                events = JSON.parse(localStorage.getItem('events'));
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('studyTimeToday', studyTimeToday.toString());
+            localStorage.setItem('totalStudyTime', totalStudyTime.toString());
+            localStorage.setItem('subjects', JSON.stringify(subjects));
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('events', JSON.stringify(events));
+        }
+
+        // Update progress tracker
+        function updateProgressTracker() {
+            const todayHours = Math.floor(studyTimeToday / 60);
+            const todayMinutes = studyTimeToday % 60;
+            document.getElementById('today-study').textContent = `${todayHours}h ${todayMinutes}m`;
+
+            const completionPercent = Math.min(Math.floor((totalStudyTime / totalStudyGoal) * 100), 100);
+            document.getElementById('completion-percent').textContent = `${completionPercent}%`;
+
+            const progressFill = document.getElementById('progress-fill');
+            progressFill.style.width = `${completionPercent}%`;
+            progressFill.textContent = `${completionPercent}%`;
+        }
+
+        // Load and display subjects
+        function loadSubjects() {
+            const container = document.getElementById('subjects-container');
+            container.innerHTML = '';
+
+            subjects.forEach((subject, index) => {
+                const card = document.createElement('div');
+                card.className = `subject-card ${subject.color}`;
+                card.innerHTML = `
+                    <h3>${subject.name}</h3>
+                    <div class="grade-display">${subject.grade}</div>
+                    <button onclick="editSubject(${index})">Edit</button>
+                    <button onclick="deleteSubject(${index})">Delete</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Add new subject
+        function addNewSubject() {
+            const name = prompt('Enter subject name:');
+            if (name) {
+                const grade = prompt('Enter grade (e.g., A, B+, etc.):');
+                if (grade) {
+                    const colors = ['pastel-pink', 'pastel-blue', 'pastel-green', 'pastel-purple', 'pastel-yellow'];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+                    subjects.push({
+                        name: name,
+                        grade: grade,
+                        color: randomColor
+                    });
+
+                    saveData();
+                    loadSubjects();
+                }
+            }
+        }
+
+        // Edit subject
+        function editSubject(index) {
+            const newName = prompt('Edit subject name:', subjects[index].name);
+            if (newName !== null) {
+                const newGrade = prompt('Edit grade:', subjects[index].grade);
+                if (newGrade !== null) {
+                    subjects[index].name = newName;
+                    subjects[index].grade = newGrade;
+                    saveData();
+                    loadSubjects();
+                }
+            }
+        }
+
+        // Delete subject
+        function deleteSubject(index) {
+            if (confirm(`Are you sure you want to delete ${subjects[index].name}?`)) {
+                subjects.splice(index, 1);
+                saveData();
+                loadSubjects();
+            }
+        }
+
+        // Load and display tasks
+        function loadTasks() {
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = '';
+
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = `todo-item ${task.completed ? 'completed' : ''}`;
+                li.innerHTML = `
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${index})">
+                    <span class="task-text">${task.text}</span>
+                    <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+                `;
+                taskList.appendChild(li);
+            });
+        }
+
+        // Add new task
+        function addTask() {
+            const input = document.getElementById('new-task');
+            const text = input.value.trim();
+
+            if (text) {
+                tasks.push({
+                    text: text,
+                    completed: false
+                });
+
+                saveData();
+                loadTasks();
+                input.value = '';
+            }
+        }
+
+        // Toggle task completion
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            saveData();
+            loadTasks();
+        }
+
+        // Delete task
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            saveData();
+            loadTasks();
+        }
+
+        // Generate calendar
+        function generateCalendar() {
+            const calendarBody = document.getElementById('calendar-body');
+            calendarBody.innerHTML = '';
+
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+
+            // Get first day of month
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const startingDay = firstDay.getDay();
+
+            // Get days in month
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                // Create a table row
+                const row = document.createElement('tr');
+
+                // Create cells for each day of the week
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement('td');
+
+                    if (i === 0 && j < startingDay) {
+                        // Empty cells before the first day of the month
+                        cell.textContent = '';
+                    } else if (date > daysInMonth) {
+                        // Empty cells after the last day of the month
+                        cell.textContent = '';
+                    } else {
+                        // Cells with dates
+                        cell.textContent = date;
+
+                        // Highlight today's date
+                        if (date === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                            cell.classList.add('today');
+                        }
+
+                        // Add events for this date
+                        const dateStr = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`;
+                        const dateEvents = events.filter(event => event.date === dateStr);
+
+                        dateEvents.forEach(event => {
+                            const eventDiv = document.createElement('div');
+                            eventDiv.className = 'event';
+                            eventDiv.textContent = event.text;
+                            cell.appendChild(eventDiv);
+                        });
+
+                        date++;
+                    }
+
+                    row.appendChild(cell);
+                }
+
+                calendarBody.appendChild(row);
+
+                // Stop creating rows if we've processed all days
+                if (date > daysInMonth) {
+                    break;
+                }
+            }
+        }
+
+        // Add event to calendar
+        function addEvent() {
+            const dateInput = document.getElementById('event-date');
+            const textInput = document.getElementById('event-text');
+
+            const date = dateInput.value;
+            const text = textInput.value.trim();
+
+            if (date && text) {
+                events.push({
+                    date: date,
+                    text: text
+                });
+
+                saveData();
+                generateCalendar();
+
+                // Clear inputs
+                dateInput.value = '';
+                textInput.value = '';
+            }
+        }
+
+        // Load events
+        function loadEvents() {
+            // For demo purposes, add some sample events if none exist
+            if (events.length === 0) {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+
+                const todayStr = today.toISOString().split('T')[0];
+                const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+                events = [
+                    { date: todayStr, text: 'Math Exam' },
+                    { date: todayStr, text: 'Submit Essay' },
+                    { date: tomorrowStr, text: 'Group Project Meeting' }
+                ];
+
+                saveData();
+            }
+        }
+
+        // Timer functions
+        function startTimer() {
+            if (!isTimerRunning) {
+                const studyMinutes = parseInt(document.getElementById('study-time').value);
+                const breakMinutes = parseInt(document.getElementById('break-time').value);
+
+                if (isStudyTime) {
+                    timeLeft = studyMinutes * 60;
+                } else {
+                    timeLeft = breakMinutes * 60;
+                }
+
+                timerInterval = setInterval(updateTimer, 1000);
+                isTimerRunning = true;
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            const studyMinutes = parseInt(document.getElementById('study-time').value);
+            timeLeft = studyMinutes * 60;
+            isStudyTime = true;
+            updateTimerDisplay();
+        }
+
+        function updateTimer() {
+            timeLeft--;
+
+            if (timeLeft <= 0) {
+                // Timer finished
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+
+                if (isStudyTime) {
+                    // Study session completed
+                    const studyMinutes = parseInt(document.getElementById('study-time').value);
+                    studyTimeToday += studyMinutes;
+                    totalStudyTime += studyMinutes;
+
+                    // Add to session history
+                    const sessionList = document.getElementById('session-list');
+                    const li = document.createElement('li');
+                    const now = new Date();
+                    li.textContent = `Studied for ${studyMinutes} minutes at ${now.toLocaleTimeString()}`;
+                    sessionList.appendChild(li);
+
+                    // Switch to break time
+                    isStudyTime = false;
+                    const breakMinutes = parseInt(document.getElementById('break-time').value);
+                    timeLeft = breakMinutes * 60;
+
+                    // Notify user
+                    alert('Study session complete! Time for a break.');
+
+                    // Start break timer automatically
+                    startTimer();
+                } else {
+                    // Break completed
+                    isStudyTime = true;
+                    const studyMinutes = parseInt(document.getElementById('study-time').value);
+                    timeLeft = studyMinutes * 60;
+
+                    // Notify user
+                    alert('Break over! Time to get back to studying.');
+                }
+
+                // Save data and update progress
+                saveData();
+                updateProgressTracker();
+            }
+
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer-display').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+    </script>
+</body>
+</html>
